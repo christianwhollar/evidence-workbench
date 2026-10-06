@@ -3,22 +3,38 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
     <title>Evidence workbench</title>
     <link rel="stylesheet" href="/assets/style.css" />
   </head>
   <body>
+    <a class="skip-link" href="#main">Skip to content</a>
     <header>
       <div class="brand">
-        <span class="mark">∷</span>
+        <span class="mark" aria-hidden="true"
+          ><svg
+            viewBox="0 0 40 40"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path
+              d="M20 11C14 7 8 7 4 9v23c5-2 10-1 16 3 6-4 11-5 16-3V9c-5-2-11-2-16 2Zm0 0v24M9 15l6 1m-6 5 6 1m10-6 6-1m-6 7 6-1"
+            /></svg
+        ></span>
         <div>
           <strong>Evidence workbench</strong
-          ><small>Research / retrieval with provenance</small>
+          ><small>A library of sources & connections</small>
         </div>
       </div>
       <div class="auth" id="auth"></div>
     </header>
     <nav id="nav" aria-label="Main navigation"></nav>
-    <main id="main"><div class="loading">Loading workspace…</div></main>
+    <main id="main" tabindex="-1">
+      <div class="loading">Loading workspace…</div>
+    </main>
     <div id="toast" role="status" hidden></div>
     <script src="/assets/common.js"></script>
     <script src="/assets/app.js"></script>

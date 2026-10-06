@@ -24,7 +24,7 @@ async function render(next = page) {
 function search() {
   $("#main").innerHTML =
     heading(
-      "Find the source. Keep the provenance.",
+      "Every answer begins with a source.",
       "Search the current documents your identity can access, then inspect the exact evidence.",
     ) +
     `<div class="stats">${stat("Accessible documents", docs.length, "Current tenant and role")}${stat("Retrieval methods", config.neural ? "4" : "1", config.neural ? "Lexical · dense · fusion · rerank" : "BM25 lexical retrieval")}${stat("Citation format", "Versioned", "Document / revision / chunk")}${stat("Default response", "Excerpts", "Source relevance is not entailment")}</div><div class="card"><div class="toolbar"><input id="question" aria-label="Evidence question" placeholder="How should we handle a currency mismatch?" value="How should we handle a currency mismatch?"><select id="method" aria-label="Retrieval method"><option value="bm25">BM25 · lexical</option>${config.neural ? '<option value="dense">MiniLM · dense</option><option value="fusion" selected>Hybrid · rank fusion</option><option value="rerank">Hybrid + reranker</option>' : ""}</select><button class="primary" id="search">Find evidence</button></div><div class="row small muted"><span>Try:</span>${["What happens when a worker crashes?", "Who can approve a case?", "How is DV01 calculated?"].map((q) => `<button class="small" data-question="${esc(q)}">${esc(q)}</button>`).join("")}</div></div><div id="results" style="margin-top:22px"></div>`;

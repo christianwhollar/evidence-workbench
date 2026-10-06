@@ -1,0 +1,206 @@
+{
+  "release": "0.2.1",
+  "scope": "Interface styling and navigation semantics; business logic unchanged",
+  "viewports": [
+    320,
+    390,
+    768,
+    1024,
+    1440
+  ],
+  "responsive_views": [
+    {
+      "project": "evidence-workbench",
+      "width": 1440,
+      "tab": "search",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 1440,
+      "tab": "documents",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 1440,
+      "tab": "graph",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 1440,
+      "tab": "benchmark",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 1440,
+      "tab": "activity",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 1024,
+      "tab": "search",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 1024,
+      "tab": "documents",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 1024,
+      "tab": "graph",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 1024,
+      "tab": "benchmark",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 1024,
+      "tab": "activity",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 768,
+      "tab": "search",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 768,
+      "tab": "documents",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 768,
+      "tab": "graph",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 768,
+      "tab": "benchmark",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 768,
+      "tab": "activity",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 390,
+      "tab": "search",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 390,
+      "tab": "documents",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 390,
+      "tab": "graph",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 390,
+      "tab": "benchmark",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 390,
+      "tab": "activity",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 320,
+      "tab": "search",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 320,
+      "tab": "documents",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 320,
+      "tab": "graph",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 320,
+      "tab": "benchmark",
+      "overflow": false,
+      "aria_current": true
+    },
+    {
+      "project": "evidence-workbench",
+      "width": 320,
+      "tab": "activity",
+      "overflow": false,
+      "aria_current": true
+    }
+  ],
+  "workflow": {
+    "project": "evidence-workbench",
+    "tabs": [
+      "search",
+      "documents",
+      "graph",
+      "benchmark",
+      "activity"
+    ],
+    "workflow": "passed",
+    "javascript_errors": []
+  },
+  "javascript_syntax": "passed",
+  "keyboard_skip_link": "passed",
+  "screenshots": [
+    "screenshot.png",
+    "mobile.png"
+  ]
+}
