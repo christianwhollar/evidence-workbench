@@ -1,0 +1,26 @@
+{
+  "corpus": "BEIR SciFact",
+  "source": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/scifact.zip",
+  "archive_sha256": "536e14446a0ba56ed1398ab1055f39fe852686ecad24a6306c80c490fa8e0165",
+  "corpus_documents": 5183,
+  "test_queries": 300,
+  "embedder": "sentence-transformers/all-MiniLM-L6-v2",
+  "embedder_revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+  "reranker": "cross-encoder/ms-marco-TinyBERT-L2-v2",
+  "reranker_revision": "81d1926f67cb8eee2c2be17ca9f793c7c3bd20cc",
+  "dense_input": "title + abstract, model's 256 wordpiece truncation",
+  "reranker_max_length": 512,
+  "candidates": 50,
+  "rrf_constant": 60,
+  "bm25": {
+    "k1": 1.5,
+    "b": 0.75
+  },
+  "k": 10,
+  "device": "cpu",
+  "platform": "macOS-15.6.1-arm64-arm-64bit",
+  "torch_threads": 4,
+  "model_loading_and_index_build_excluded_from_query_latency": true,
+  "embedding_build_seconds": 46.1105273750145,
+  "scope": "Off-the-shelf models; no SciFact label fitting or parameter tuning."
+}

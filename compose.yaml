@@ -3,6 +3,7 @@ services:
     build: .
     environment:
       APP_DEMO: "1"
+    command: ["python", "-m", "evidence.container"]
     ports:
       - "127.0.0.1:8102:8102"
     volumes:

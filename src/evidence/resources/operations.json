@@ -1,0 +1,401 @@
+[
+  {
+    "id": "quantity-break",
+    "title": "Quantity discrepancy",
+    "text": "Fictional demo operations manual. A quantity discrepancy exists when booking and confirmation show different units. Compare the two source quantities and compute the cash difference using each source price. Preserve both records. Do not amend the booking from a model suggestion. Refer cash differences of at least 10000 in absolute value to the risk reviewer; otherwise request a corrected confirmation.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "quantity-break",
+        "relation": "requires",
+        "target": "reconciliation"
+      }
+    ]
+  },
+  {
+    "id": "price-break",
+    "title": "Price discrepancy",
+    "text": "Fictional demo operations manual. For a price discrepancy, compare currency per unit before multiplying by quantity. A quoted bond clean price per 100 face cannot be mixed with a currency-per-unit trade price. Record the pricing convention. Differences below 10000 may enter normal review; larger differences require a risk escalation.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "price-break",
+        "relation": "requires",
+        "target": "pricing-check"
+      }
+    ]
+  },
+  {
+    "id": "settlement-break",
+    "title": "Settlement date disagreement",
+    "text": "Fictional demo operations manual. A settlement date disagreement requires comparing the booking date with the confirmation date and the documented settlement instruction. Ask operations to confirm the intended date. A date-only difference has no implied cash exposure. Preserve source dates and keep the case open until independent review.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "settlement-break",
+        "relation": "owned_by",
+        "target": "operations"
+      }
+    ]
+  },
+  {
+    "id": "currency-break",
+    "title": "Currency mismatch",
+    "text": "Fictional demo operations manual. Cash differences are undefined when currencies differ. Do not net USD against EUR or invent an exchange rate. Escalate the currency discrepancy to the reviewer and request corrected source records. If an FX conversion is explicitly approved, retain the rate source, timestamp, and reviewer decision.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "currency-break",
+        "relation": "requires",
+        "target": "risk-review"
+      }
+    ]
+  },
+  {
+    "id": "instrument-break",
+    "title": "Instrument identity mismatch",
+    "text": "Fictional demo operations manual. Different instrument identifiers prevent direct cash comparison. Escalate before price or quantity interpretation. Check the instrument reference data and counterparty identifier mapping. Matching a display name alone is insufficient evidence that two securities are identical.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "instrument-break",
+        "relation": "requires",
+        "target": "reference-data"
+      }
+    ]
+  },
+  {
+    "id": "missing-record",
+    "title": "Missing confirmation or booking",
+    "text": "Fictional demo operations manual. An unmatched feed record is quarantined with its trade identifier and missing-source reason. It is not a matched trade. Obtain the missing confirmation or booking, then reimport the complete pair. Repeated imports preserve the case for an identical discrepant pair.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "missing-record",
+        "relation": "requires",
+        "target": "feed-quarantine"
+      }
+    ]
+  },
+  {
+    "id": "materiality",
+    "title": "Cash materiality threshold",
+    "text": "Fictional demo operations manual. The fictional demo desk uses an absolute cash-difference threshold of 10000, inclusive. Equal-currency and equal-instrument records are comparable. Materiality does not authorize trading or automatic approval. Every investigated exception still requires an independent reviewer.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "risk-review",
+        "relation": "requires",
+        "target": "independent-review"
+      }
+    ]
+  },
+  {
+    "id": "maker-checker",
+    "title": "Independent review",
+    "text": "Fictional demo operations manual. The person who created a case cannot approve or reject it. A reviewer must have the reviewer role in the same tenant. Every decision needs a rationale. Closed cases remain read-only; changing source evidence requires a new investigation with a separate history.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "independent-review",
+        "relation": "performed_by",
+        "target": "reviewer"
+      }
+    ]
+  },
+  {
+    "id": "source-outage",
+    "title": "Unavailable evidence source",
+    "text": "Fictional demo operations manual. If a source is unavailable, do not assume the records match. Record the failure, retain the work item, and escalate or retry within the configured attempt limit. Language-model narration may fall back to deterministic findings, but unavailable financial records cannot be invented.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "source-outage",
+        "relation": "requires",
+        "target": "manual-escalation"
+      }
+    ]
+  },
+  {
+    "id": "lease-recovery",
+    "title": "Worker leases and recovery",
+    "text": "Fictional demo operations manual. Investigation workers acquire a 60-second lease and a unique token. A stale token cannot complete a case after another worker takes over. After three attempts, an expired final lease becomes a failed case. A reviewer may authorize a new retry cycle with a note.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "worker",
+        "relation": "uses",
+        "target": "durable-queue"
+      }
+    ]
+  },
+  {
+    "id": "idempotency",
+    "title": "Idempotent requests",
+    "text": "Fictional demo operations manual. Create requests bind an idempotency key to a canonical payload hash within a tenant. Repeating the same key and payload returns the original case. Reusing a key for different content returns a conflict. Feed imports also bind a batch key to the file pair fingerprint.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "feed-ingestion",
+        "relation": "uses",
+        "target": "idempotency-store"
+      }
+    ]
+  },
+  {
+    "id": "feed-schema",
+    "title": "Structured feed contract",
+    "text": "Fictional demo operations manual. The CSV feed requires trade_id, instrument, quantity, price, settlement and currency columns. Quantities and prices must be positive decimals; currency is a three-letter uppercase code; settlement is an ISO date. Duplicate identifiers are rejected before any batch writes. Each file supports at most 5000 rows.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "feed-ingestion",
+        "relation": "reads",
+        "target": "booking-ledger"
+      }
+    ]
+  },
+  {
+    "id": "audit-chain",
+    "title": "Audit verification",
+    "text": "Fictional demo operations manual. Each audit event includes the case identifier, actor, event kind, timestamp and detail, and is hashed with the prior tenant digest. Local verification detects edited events against the retained chain. An external trusted checkpoint is needed to detect wholesale rewrites or tail truncation.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "audit-service",
+        "relation": "emits",
+        "target": "audit-checkpoint"
+      }
+    ]
+  },
+  {
+    "id": "tenant-isolation",
+    "title": "Tenant and document access",
+    "text": "Fictional demo operations manual. Authenticate the caller before selecting data. Every case lookup is tenant scoped. Document retrieval also filters current roles and revisions before ranking. A permission revocation must take effect even if a vector index still holds an older document version.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "retrieval-service",
+        "relation": "enforces",
+        "target": "access-control"
+      }
+    ]
+  },
+  {
+    "id": "retrieval-citations",
+    "title": "Evidence citation protocol",
+    "text": "Fictional demo operations manual. Citations identify a document, revision, chunk identifier and source text hash. Exact excerpts remain attributable to source text. A relevant passage is not proof of an answer. Generated answers require reviewer scrutiny; citation validity alone does not establish entailment.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "retrieval-service",
+        "relation": "returns",
+        "target": "versioned-citation"
+      }
+    ]
+  },
+  {
+    "id": "prompt-injection",
+    "title": "Untrusted text in investigations",
+    "text": "Fictional demo operations manual. Counterparty notes and retrieved documents are untrusted content. A sentence asking to ignore policies, approve a trade, or fetch another tenant must not alter authorization or tool scope. The model can draft commentary; deterministic checks and independent review control disposition.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "model-narrator",
+        "relation": "consumes",
+        "target": "untrusted-evidence"
+      }
+    ]
+  },
+  {
+    "id": "pricing-conventions",
+    "title": "Dated bond pricing conventions",
+    "text": "Fictional demo operations manual. The demo dated bond calculator discounts regular coupon cash flows with ACT/365F times and nominal periodic yield. Accrued interest uses actual elapsed days divided by actual days in the coupon period. Schedules roll backward from maturity with end-of-month preservation. No holiday adjustment or irregular stub support is included.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "pricing-check",
+        "relation": "uses",
+        "target": "cashflow-engine"
+      }
+    ]
+  },
+  {
+    "id": "dv01",
+    "title": "Duration and DV01",
+    "text": "Fictional demo operations manual. DV01 is estimated as half the price difference between a one-basis-point downward yield move and an upward move. Modified duration divides that price difference by twice the yield step and dirty price. The result is a parallel-yield sensitivity, not a key-rate duration measure.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "cashflow-engine",
+        "relation": "produces",
+        "target": "risk-sensitivity"
+      }
+    ]
+  },
+  {
+    "id": "model-budget",
+    "title": "Model budget reservations",
+    "text": "Fictional demo operations manual. Reserve the conservative cost bound before a provider call. Settle known successful usage and retain reservations when a timeout leaves billing uncertain. A reviewer may reconcile an uncertain reservation using provider evidence. A model outage must not disable deterministic reconciliation.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "model-router",
+        "relation": "uses",
+        "target": "budget-ledger"
+      }
+    ]
+  },
+  {
+    "id": "model-routing",
+    "title": "Model selection",
+    "text": "Fictional demo operations manual. Filter providers by privacy approval and required quality before considering estimated cost. Quality measurements depend on a named task and evaluation data. A rating configured by an operator is not a universal capability score. Preserve routing decisions and attempt status for diagnosis.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "model-narrator",
+        "relation": "calls",
+        "target": "model-router"
+      }
+    ]
+  },
+  {
+    "id": "deployment",
+    "title": "Service deployment boundaries",
+    "text": "Fictional demo operations manual. The local demo binds to loopback and uses named demo identities. Hosted deployments require real credentials, TLS, persistent storage, backups and a configured model endpoint. Two router replicas need a shared quota database. The trade desk SQLite store supports a single host deployment.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "trade-desk",
+        "relation": "depends_on",
+        "target": "durable-queue"
+      }
+    ]
+  },
+  {
+    "id": "rollback",
+    "title": "Recovery after a release",
+    "text": "Fictional demo operations manual. Before release, back up the database and verify the migration against a copy. Roll back application images only when the database schema remains compatible. Test restore and replay of pending investigations. Retain failure reports and the previous model-routing configuration.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "release-process",
+        "relation": "requires",
+        "target": "restore-drill"
+      }
+    ]
+  },
+  {
+    "id": "escalation",
+    "title": "Operations ownership",
+    "text": "Fictional demo operations manual. Operations owns settlement and missing-confirmation investigations. Risk reviewers own material cash differences and incomparable instruments or currencies. Engineering owns source outages and worker failures. Every handoff should identify the case, evidence, owner, and next action.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "operations",
+        "relation": "reports_to",
+        "target": "desk-supervisor"
+      }
+    ]
+  },
+  {
+    "id": "reconciliation",
+    "title": "Reconciliation service ownership",
+    "text": "Fictional demo operations manual. The reconciliation service reads the booking ledger and the counterparty confirmation feed. It sends deterministic findings to the trade desk. It does not place orders or edit source positions. Operations validates source corrections before an independent review closes a case.",
+    "roles": [
+      "analyst",
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "reconciliation",
+        "relation": "owned_by",
+        "target": "operations"
+      }
+    ]
+  },
+  {
+    "id": "restricted-review",
+    "title": "Restricted reviewer escalation notes",
+    "text": "SYNTHETIC ORCHID: reviewer-only escalation routing. This confidential fixture tests access control. Analysts must not retrieve this sentence. No actual client or trading information is included.",
+    "roles": [
+      "reviewer"
+    ],
+    "edges": [
+      {
+        "source": "reviewer",
+        "relation": "uses",
+        "target": "restricted-routing"
+      }
+    ]
+  }
+]

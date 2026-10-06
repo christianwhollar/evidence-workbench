@@ -1,0 +1,86 @@
+{
+  "config": {
+    "corpus": "BEIR SciFact",
+    "source": "https://public.ukp.informatik.tu-darmstadt.de/thakur/BEIR/datasets/scifact.zip",
+    "archive_sha256": "536e14446a0ba56ed1398ab1055f39fe852686ecad24a6306c80c490fa8e0165",
+    "corpus_documents": 5183,
+    "test_queries": 300,
+    "embedder": "sentence-transformers/all-MiniLM-L6-v2",
+    "embedder_revision": "1110a243fdf4706b3f48f1d95db1a4f5529b4d41",
+    "reranker": "cross-encoder/ms-marco-TinyBERT-L2-v2",
+    "reranker_revision": "81d1926f67cb8eee2c2be17ca9f793c7c3bd20cc",
+    "dense_input": "title + abstract, model's 256 wordpiece truncation",
+    "reranker_max_length": 512,
+    "candidates": 50,
+    "rrf_constant": 60,
+    "bm25": {
+      "k1": 1.5,
+      "b": 0.75
+    },
+    "k": 10,
+    "device": "cpu",
+    "platform": "macOS-15.6.1-arm64-arm-64bit",
+    "torch_threads": 4,
+    "model_loading_and_index_build_excluded_from_query_latency": true,
+    "embedding_build_seconds": 46.1105273750145,
+    "scope": "Off-the-shelf models; no SciFact label fitting or parameter tuning."
+  },
+  "summary": {
+    "bm25": {
+      "ndcg_at_10": 0.6646598637127541,
+      "recall_at_10": 0.7849444444444444,
+      "mrr_at_10": 0.6327804232804233,
+      "ndcg_ci95": [
+        0.6191852675769901,
+        0.706036463609101
+      ],
+      "p50_ms": 1.7809789860621095,
+      "p95_ms": 2.6212878961814567
+    },
+    "dense": {
+      "ndcg_at_10": 0.6450816521455774,
+      "recall_at_10": 0.7833333333333333,
+      "mrr_at_10": 0.6047248677248678,
+      "ndcg_ci95": [
+        0.5991362310350645,
+        0.6901906063100617
+      ],
+      "p50_ms": 12.914395512780175,
+      "p95_ms": 16.231964514008723
+    },
+    "fusion": {
+      "ndcg_at_10": 0.6886845806119501,
+      "recall_at_10": 0.8328888888888889,
+      "mrr_at_10": 0.6466005291005291,
+      "ndcg_ci95": [
+        0.6439671465005493,
+        0.7288139982378143
+      ],
+      "p50_ms": 13.104062993079424,
+      "p95_ms": 16.07807258842513
+    },
+    "rerank": {
+      "ndcg_at_10": 0.6792721222868068,
+      "recall_at_10": 0.8082777777777778,
+      "mrr_at_10": 0.6480952380952381,
+      "ndcg_ci95": [
+        0.6334837142457589,
+        0.7224701488940091
+      ],
+      "p50_ms": 149.44874998764135,
+      "p95_ms": 179.5320562843699
+    }
+  },
+  "rerank_minus_bm25": {
+    "ndcg_difference": 0.014612258574052725,
+    "paired_ci95": [
+      -0.01683460331092316,
+      0.04550986931583438
+    ]
+  },
+  "limitations": [
+    "Scientific retrieval does not validate financial-domain accuracy.",
+    "Qrels measure relevance, not claim entailment or answer faithfulness.",
+    "Wall-clock timings depend on device load and are not a service SLA."
+  ]
+}

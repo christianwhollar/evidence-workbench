@@ -1,6 +1,8 @@
 import hashlib
 import json
 import sqlite3
+import time
+import uuid
 from contextlib import contextmanager
 from pathlib import Path
 from pydantic import BaseModel, ConfigDict, Field
@@ -32,6 +34,15 @@ class Store:
                     tenant TEXT NOT NULL, id TEXT NOT NULL, revision INTEGER NOT NULL,
                     fingerprint TEXT NOT NULL, payload TEXT NOT NULL, deleted INTEGER NOT NULL DEFAULT 0,
                     PRIMARY KEY(tenant,id,revision)
+                );
+                CREATE TABLE IF NOT EXISTS retrieval_events (
+                    id TEXT PRIMARY KEY, tenant TEXT NOT NULL, actor TEXT NOT NULL,
+                    role TEXT NOT NULL, created_at REAL NOT NULL, payload TEXT NOT NULL
+                );
+                CREATE TABLE IF NOT EXISTS feedback (
+                    query_id TEXT NOT NULL, tenant TEXT NOT NULL, actor TEXT NOT NULL,
+                    useful INTEGER NOT NULL, note TEXT NOT NULL, updated_at REAL NOT NULL,
+                    PRIMARY KEY(query_id,tenant,actor)
                 );
             """)
 
@@ -98,3 +109,64 @@ class Store:
             if role in payload["roles"]:
                 docs.append({**payload, "revision": row["revision"]})
         return docs
+
+    def history(self, tenant, role, document_id):
+        # Current access and the access recorded on each historical revision are both required.
+        if not any(d["id"] == document_id for d in self.visible(tenant, role)):
+            return []
+        with self.connect() as db:
+            rows = db.execute(
+                "SELECT * FROM documents WHERE tenant=? AND id=? ORDER BY revision DESC",
+                (tenant, document_id),
+            ).fetchall()
+        return [
+            {
+                **json.loads(r["payload"]),
+                "revision": r["revision"],
+                "deleted": bool(r["deleted"]),
+                "fingerprint": r["fingerprint"],
+            }
+            for r in rows
+            if role in json.loads(r["payload"])["roles"]
+        ]
+
+    def record_query(self, actor, query, method, hits, latency_ms):
+        query_id = str(uuid.uuid4())
+        payload = {
+            "query_sha256": hashlib.sha256(query.encode()).hexdigest(),
+            "method": method,
+            "citations": [
+                {"id": h["id"], "document_id": h["document_id"], "revision": h["revision"]}
+                for h in hits
+            ],
+            "latency_ms": latency_ms,
+        }
+        with self.connect() as db:
+            db.execute(
+                "INSERT INTO retrieval_events VALUES(?,?,?,?,?,?)",
+                (query_id, actor.tenant, actor.user, actor.role, time.time(), json.dumps(payload)),
+            )
+        return query_id
+
+    def feedback(self, actor, query_id, useful, note):
+        with self.connect() as db:
+            if not db.execute(
+                "SELECT 1 FROM retrieval_events WHERE id=? AND tenant=? AND actor=?",
+                (query_id, actor.tenant, actor.user),
+            ).fetchone():
+                raise KeyError(query_id)
+            db.execute(
+                "INSERT INTO feedback VALUES(?,?,?,?,?,?) ON CONFLICT(query_id,tenant,actor) DO UPDATE SET useful=excluded.useful,note=excluded.note,updated_at=excluded.updated_at",
+                (query_id, actor.tenant, actor.user, int(useful), note, time.time()),
+            )
+
+    def activity(self, actor):
+        with self.connect() as db:
+            rows = db.execute(
+                "SELECT * FROM retrieval_events WHERE tenant=? AND actor=? ORDER BY created_at DESC LIMIT 50",
+                (actor.tenant, actor.user),
+            ).fetchall()
+        # Do not replay old snippets: logs retain only hashes, IDs and timing.
+        return [
+            {"id": r["id"], "created_at": r["created_at"], **json.loads(r["payload"])} for r in rows
+        ]

@@ -29,6 +29,7 @@ def generate(extracted, question, router_url, api_key):
                     "minimum_quality": 0.5,
                     "data_class": "confidential",
                     "response_format": "json",
+                    "output_schema": GroundedDraft.model_json_schema(),
                 },
             )
             response.raise_for_status()
